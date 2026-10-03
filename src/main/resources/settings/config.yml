@@ -1,0 +1,251 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                 FMC-Lobby  ·  config.yml                     ║
+# ║  Farbcodes: &a, &l … und Hex als &x&A&2&3&5&F&F              ║
+# ║  Änderungen werden mit /lobby reload übernommen.             ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# Name dieses Servers (Platzhalter %server% im Scoreboard)
+server-name: 'Lobby'
+
+# ──────────────────────────────── Welt / Spawn ────────────────────────────────
+world:
+  # Weltname der Lobby (für Gamerules, Autosave und Fallback-Spawn)
+  name: 'world'
+  # Autosave aus: Baublöcke können so nie dauerhaft gespeichert werden.
+  # ACHTUNG: Im Baumodus (/lobby build) gebaute Änderungen werden dann auch nicht gespeichert!
+  # Zum Umbauen der Lobby kurz auf false setzen, /lobby reload, danach /save-all.
+  disable-autosave: true
+  # Unter dieser Höhe wird der Spieler zum Spawn teleportiert
+  void-y: 0
+
+# Wird per /lobby setspawn gesetzt
+spawn:
+  world: 'world'
+  x: 0.5
+  y: 100.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+
+# ──────────────────────────────── Hotbar ────────────────────────────────
+# Slots 0-8. Ein Item mit enabled: false wird nicht vergeben.
+# held-slot: Slot, der beim Join ausgewählt ist.
+hotbar:
+  held-slot: 4
+  teleporter:
+    enabled: true
+    slot: 4
+    material: COMPASS
+    glow: true
+    name: '&6&lTeleporter'
+    lore:
+      - ''
+      - '&7Wähle hier deinen Spielmodus aus.'
+      - ''
+      - '&bRechtsklick&8: &7Teleporter öffnen'
+  particles:
+    enabled: true
+    slot: 8
+    material: BLAZE_POWDER
+    glow: false
+    name: '&6&lPartikel'
+    lore:
+      - ''
+      - '&7Wähle einen Partikel-Effekt aus.'
+      - ''
+      - '&bRechtsklick&8: &7Partikel-Menü öffnen'
+  grapple:
+    enabled: true
+    slot: 0
+    material: FISHING_ROD
+    glow: false
+    name: '&6&lEnterhaken'
+    lore:
+      - ''
+      - '&7Abklingzeit&8: &e%cooldown%s'
+      - ''
+      - '&bRechtsklick&8: &7Haken auswerfen'
+      - '&bErneut Rechtsklick&8: &7Zum Haken ziehen'
+  build-blocks:
+    enabled: true
+    slot: 1
+    material: PURPLE_CONCRETE
+    glow: false
+    name: '&6&lBaublöcke'
+    lore:
+      - ''
+      - '&7Haltbarkeit&8: &e%lifetime%s'
+      - '&7Maximal gleichzeitig&8: &e%limit%'
+      - ''
+      - '&bRechtsklick&8: &7Block platzieren'
+
+# ──────────────────────────────── GUI allgemein ────────────────────────────────
+gui:
+  # Pfeil-Köpfe für den Seitenwechsel (Base64-"textures"-Wert, wie in SkullUtil im CityBuild).
+  # Leer lassen = normaler Pfeil (ARROW) als Ersatz.
+  heads:
+    arrow-left-green: ''
+    arrow-right-green: ''
+    arrow-left-red: ''
+    arrow-right-red: ''
+
+# ──────────────────────────────── Teleporter ────────────────────────────────
+# Neue Spielmodi werden nur hier ergänzt (danach /lobby reload).
+# Platzhalter in der Lore: %status%, %online%, %max%, %server%
+teleporter:
+  title: '&8&nLobby&8 | Teleporter'
+  rows: 3
+  # Alle X Sekunden wird jeder Server asynchron angepingt
+  status-interval-seconds: 3
+  # Timeout für den Server-List-Ping in Millisekunden
+  ping-timeout-ms: 1000
+  # Schutz gegen Spam-Klicks (Millisekunden)
+  click-cooldown-ms: 2000
+  servers:
+    citybuild:
+      slot: 13
+      proxy-name: 'CityBuild'      # Servername im Proxy
+      host: '127.0.0.1'            # für den Status-Ping
+      port: 25566
+      material: GRASS_BLOCK
+      glow: true
+      name: '&a&lCityBuild'
+      lore:
+        - ''
+        - '&7Status&8: %status%'
+        - '&7Spieler online&8: &e%online%&8/&e%max%'
+        - ''
+        - '&bKlicke hier, um CityBuild zu betreten.'
+
+# ──────────────────────────────── Partikel ────────────────────────────────
+# Formen: RING (Hüfte), HELIX (Spirale), HALO (über dem Kopf), FEET (an den Füßen)
+# particle: Vanilla-Name (z. B. heart, flame, dust, happy_villager, end_rod, witch, soul_fire_flame)
+# amount: Partikel pro Durchgang (wenig halten!)
+# Für "dust": color ('#RRGGBB') und size. Für "entity_effect": color.
+# permission: optional, ohne Permission ist der Eintrag "Gesperrt"
+# page: optional (Standard 1), mehrere Seiten erzeugen automatisch Pfeil-Köpfe
+particles:
+  # Zeichen-Intervall in Ticks (2-3 empfohlen)
+  interval-ticks: 3
+  # Sichtweite der Partikel in Blöcken
+  view-distance: 24
+  menu:
+    title: '&8&nLobby&8 | Partikel'
+    rows: 4
+    remove-slot: 31
+    # Zurück-Knopf (öffnet den Teleporter). -1 = aus
+    back-slot: -1
+  effects:
+    hearts:
+      slot: 10
+      material: RED_DYE
+      name: 'Herzen'
+      particle: heart
+      amount: 1
+      shape: HALO
+    flame:
+      slot: 11
+      material: BLAZE_POWDER
+      name: 'Flammen'
+      particle: flame
+      amount: 2
+      shape: RING
+    purple:
+      slot: 12
+      material: PURPLE_DYE
+      name: 'FarmMC-Lila'
+      particle: dust
+      color: '#A235FF'
+      size: 1.0
+      amount: 2
+      shape: HELIX
+    emerald:
+      slot: 13
+      material: EMERALD
+      name: 'Smaragd'
+      particle: happy_villager
+      amount: 1
+      shape: FEET
+    soul:
+      slot: 14
+      material: SOUL_LANTERN
+      name: 'Seelenfeuer'
+      particle: soul_fire_flame
+      amount: 2
+      shape: RING
+      permission: 'lobby.particle.soul'
+    endrod:
+      slot: 15
+      material: END_ROD
+      name: 'Sternenstaub'
+      particle: end_rod
+      amount: 2
+      shape: HELIX
+      permission: 'lobby.particle.endrod'
+    witch:
+      slot: 16
+      material: AMETHYST_SHARD
+      name: 'Magie'
+      particle: witch
+      amount: 1
+      shape: HALO
+      permission: 'lobby.particle.witch'
+
+# ──────────────────────────────── Enterhaken ────────────────────────────────
+grapple:
+  # Abklingzeit in Millisekunden
+  cooldown-ms: 1500
+  # Velocity = (Haken - Spieler) × strength + Y-Boost, danach auf max-velocity begrenzt
+  strength: 0.3
+  y-boost: 0.35
+  max-velocity: 2.0
+  # Begrenzung der Y-Komponente (Anti-Cheat)
+  max-y-velocity: 1.6
+  # Wurfgeschwindigkeit des Hakens (1.0 = Vanilla)
+  cast-multiplier: 1.5
+  # Haken bleibt an Wand/Decke hängen
+  stick-to-blocks: true
+  sounds:
+    pull: 'entity.fishing_bobber.retrieve'
+    wind: 'entity.wind_charge.wind_burst'
+
+# ──────────────────────────────── Baublöcke ────────────────────────────────
+build-blocks:
+  # Lebensdauer in Ticks (20 Ticks = 1 Sekunde)
+  lifetime-ticks: 60
+  # "Bröckel"-Animation in den letzten X Ticks (0 = aus)
+  crumble-ticks: 20
+  # Maximal gleichzeitig platzierte Blöcke pro Spieler
+  limit-per-player: 30
+  # Kein Bauen in diesem Radius um Spawn und NPCs
+  no-build-radius: 8
+  # Erlaubter Höhenbereich
+  min-y: 1
+  max-y: 200
+  # Zusätzliche Schutzpunkte (z. B. NPC-Standorte ohne Citizens). Format: 'welt;x;y;z'
+  protected-points: []
+
+# ──────────────────────────────── Tablist ────────────────────────────────
+# Platzhalter: %time% (HH:mm, Europe/Berlin), %tps%, %player%, %online%, %nl% = Zeilenumbruch
+# Icons wie im Scoreboard: {icon:item/xyz}, {block:block/xyz}, {head:Name}, {head:Auto}
+tablist:
+  enabled: true
+  header:
+    - '%nl%'
+    - '&x&9&8&3&3&F&F&lF&x&A&2&3&5&F&F&lA&x&A&C&3&7&F&F&lR&x&A&2&3&5&F&F&lM&x&9&8&3&3&F&F&lM&x&A&2&3&5&F&F&lC&8.&x&A&2&3&5&F&F&lD&x&9&8&3&3&F&F&lE'
+    - '%nl%%nl%'
+    - '&7Uhrzeit&8: &e%time%'
+    - '%nl%'
+    - '&7TPS&8: %tps%'
+    - '%nl%'
+  footer:
+    - '%nl%'
+    - '&7Webseite&8: &cwiki.farmmc.de'
+    - '%nl%'
+    - '&7Discord&8: &9discord.gg/farmmc &8┃ &7TikTok&8: &d@FarmMC'
+    - '%nl%'
+
+# ──────────────────────────────── Netzwerk ────────────────────────────────
+network:
+  # Wie oft die Gesamt-Spielerzahl (PlayerCount ALL) beim Proxy abgefragt wird
+  player-count-interval-seconds: 5

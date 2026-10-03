@@ -1,0 +1,47 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                   FMC-Lobby  ·  scoreboards.yml                      ║
+# ╠══════════════════════════════════════════════════════════════════════╣
+# ║ Platzhalter:                                                         ║
+# ║   %player%          Spielername                                      ║
+# ║   %rank%            LuckPerms-Primärgruppe (sonst rank-fallback)     ║
+# ║   %server%          Servername (server-name in der config.yml)       ║
+# ║   %online%          Spieler auf diesem Server                        ║
+# ║   %max%             Maximale Spieler auf diesem Server               ║
+# ║   %network_online%  Spieler im ganzen Netzwerk (PlayerCount ALL)     ║
+# ║   %ping%            Ping des Spielers                                ║
+# ║   Mit PlaceholderAPI zusätzlich alle %papi%-Platzhalter.             ║
+# ║                                                                      ║
+# ║ Icons (werden für Bedrock-Spieler durch ein Leerzeichen ersetzt):    ║
+# ║   {icon:item/xyz}    Sprite aus dem Atlas minecraft:items            ║
+# ║                      z. B. {icon:item/diamond}                       ║
+# ║   {block:block/xyz}  Sprite aus dem Atlas minecraft:blocks           ║
+# ║                      z. B. {block:block/grass_block_side}            ║
+# ║   {head:Name}        Kopf eines bestimmten Spielers                  ║
+# ║   {head:Auto}        Kopf des Spielers, der das Scoreboard sieht     ║
+# ║                                                                      ║
+# ║ Hinweis: Minecraft zeigt maximal 15 Sidebar-Zeilen an.               ║
+# ║          Dieses Plugin nutzt höchstens 14 Zeilen.                    ║
+# ║ Leerzeilen brauchen keine eindeutigen Farbcodes, schaden aber nicht. ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+scoreboard:
+  enabled: true
+  # Titel wird nur neu gebaut, wenn sich %online% ändert
+  title: '&x&9&8&3&3&F&F&lF&x&A&2&3&5&F&F&lA&x&A&C&3&7&F&F&lR&x&A&2&3&5&F&F&lM&x&9&8&3&3&F&F&lM&x&A&2&3&5&F&F&lC&8.&x&A&2&3&5&F&F&lD&x&9&8&3&3&F&F&lE &8(&c%online%&8)'
+  # Anzeige, wenn LuckPerms fehlt oder keine Gruppe gefunden wurde
+  rank-fallback: 'Spieler'
+  lines:
+    - '&3'
+    - '&8» &x&0&0&F&F&C&C&lName'
+    - '{head:Auto} &8┃ &7%player%'
+    - '&4 &7'
+    - '&8» &x&0&0&F&F&C&C&lRang'
+    - '{icon:item/name_tag} &8┃ &7%rank%'
+    - '&5'
+    - '&8» &x&0&0&F&F&C&C&lLobby'
+    - '{block:block/purple_concrete} &8┃ &7%server%'
+    - '&6'
+    - '&8» &x&0&0&F&F&C&C&lNetzwerk online'
+    - '{icon:item/ender_eye} &8┃ &e%network_online%'
+    - '&1'
+    - '&7&oshop.farmmc.de'

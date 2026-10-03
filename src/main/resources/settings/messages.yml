@@ -1,0 +1,85 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                FMC-Lobby  ·  messages.yml                    ║
+# ║  %prefix% wird durch messages.prefix ersetzt.                ║
+# ║  %nl% = Zeilenumbruch                                         ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+messages:
+  prefix: '&8┃ &x&A&2&3&5&F&F&lLOBBY &8» &7'
+
+  # Willkommensnachricht (5 Ticks nach dem Join). Platzhalter: %player%
+  # Die erste Zeile leert den Chat (23× %nl%).
+  welcome:
+    - '%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%'
+    - '&8┃ &x&A&2&3&5&F&F&l❤ &8» &7Willkommen in der Lobby von &x&9&8&3&3&F&F&lF&x&A&2&3&5&F&F&lA&x&A&C&3&7&F&F&lR&x&A&2&3&5&F&F&lM&x&9&8&3&3&F&F&lM&x&A&2&3&5&F&F&lC&8.&x&A&2&3&5&F&F&lD&x&9&8&3&3&F&F&lE&7, &a%player%&7.'
+    - '&8┃ &x&A&2&3&5&F&F&l❤ &8» &7Nutze den &eTeleporter&7, um auf &aCityBuild &7zu gelangen.'
+    - '&8┃ &x&A&2&3&5&F&F&l❤ &8» &7Discord&8: &8/&9discord'
+    - '&8┃ &x&A&2&3&5&F&F&l❤ &8» &7Shop&8: &8/&6buy'
+    - '&3'
+
+  general:
+    no-permission: '%prefix%&cDazu hast du keine Berechtigung.'
+    player-only: '%prefix%&cDieser Befehl ist nur für Spieler.'
+    usage: '%prefix%&7Benutzung&8: &e/lobby &8<&ereload&8|&esetspawn&8|&ebuild&8>'
+
+  command:
+    reload-success: '%prefix%&7Die Konfiguration wurde &aneu geladen&7. &8(&e%time% ms&8)'
+    reload-failed: '%prefix%&cFehler beim Neuladen. Details stehen in der Konsole.'
+    setspawn-success: '%prefix%&7Der Spawn wurde &agesetzt&7.'
+    build-enabled: '%prefix%&7Baumodus &aaktiviert&7. Der Lobby-Schutz ist für dich aus.'
+    build-disabled: '%prefix%&7Baumodus &cdeaktiviert&7. Der Lobby-Schutz ist wieder aktiv.'
+
+  gui:
+    back: '&c<- Zurück zum Menü'
+    previous-page: '&a<- Vorherige Seite'
+    next-page: '&aNächste Seite ->'
+    page-lore: '&7Seite&8: &e%page%&8/&e%pages%'
+
+  teleporter:
+    status-online: '&a✔ Online'
+    status-offline: '&c✖ Neustart läuft'
+    offline: '%prefix%&a%server% &7startet gerade neu. Bitte warte einen Moment.'
+    connecting: '%prefix%&7Du wirst mit &a%server% &7verbunden&8...'
+    # ActionBar
+    cooldown: '&cBitte warte einen Moment.'
+
+  particles:
+    selected: '%prefix%&7Du hast den Partikel &a%particle% &7ausgewählt.'
+    removed: '%prefix%&7Dein Partikel wurde &centfernt&7.'
+    locked: '%prefix%&cDieser Partikel ist für dich gesperrt.'
+    none: '%prefix%&cDu hast keinen Partikel ausgewählt.'
+    state-selected: '&a✔ Ausgewählt'
+    state-locked: '&4✖ &cGesperrt'
+    state-available: '&e✦ Verfügbar'
+    action-select: '&bKlicke hier, um den Partikel auszuwählen.'
+    action-deselect: '&bKlicke hier, um den Partikel abzulegen.'
+    action-locked: '&cDu benötigst einen höheren Rang.'
+    # Lore aller Partikel-Einträge. Platzhalter: %shape%, %state%, %action%
+    lore:
+      - ''
+      - '&7Form&8: &e%shape%'
+      - '&7Status&8: %state%'
+      - ''
+      - '%action%'
+    remove-name: '&c&lPartikel entfernen'
+    remove-lore:
+      - ''
+      - '&7Aktuell&8: &e%current%'
+      - ''
+      - '&bKlicke hier, um deinen Partikel zu entfernen.'
+    none-name: 'Keiner'
+    shapes:
+      RING: 'Ring'
+      HELIX: 'Spirale'
+      HALO: 'Heiligenschein'
+      FEET: 'Füße'
+
+  # ActionBar
+  grapple:
+    cooldown: '&7Enterhaken bereit in &e%time%s'
+
+  # ActionBar
+  build-blocks:
+    limit: '&cDu hast bereits &e%limit% &cBlöcke platziert.'
+    too-close: '&cHier darfst du nicht bauen.'
+    height: '&cIn dieser Höhe darfst du nicht bauen.'

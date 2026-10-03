@@ -1,0 +1,27 @@
+name: FMC-Lobby
+version: '${project.version}'
+main: de.fmc.lobby.FMCLobby
+api-version: '1.21'
+author: FARMMC.DE
+description: Lobby-System für FARMMC.DE (Teleporter, Schutz, Partikel, Enterhaken, Baublöcke, Scoreboard, Tablist)
+website: https://farmmc.de
+softdepend:
+  - PlaceholderAPI
+  - LuckPerms
+
+commands:
+  lobby:
+    description: Verwaltung der Lobby
+    usage: /lobby <reload|setspawn|build>
+    permission: lobby.command
+
+permissions:
+  lobby.command:
+    description: Zugriff auf /lobby
+    default: true
+  lobby.admin:
+    description: /lobby setspawn und /lobby reload
+    default: op
+  lobby.build:
+    description: /lobby build (Baumodus, Schutz für sich selbst abschalten)
+    default: op

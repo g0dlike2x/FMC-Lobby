@@ -1,0 +1,100 @@
+name: Build & Deploy FMC-Lobby
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Nie zwei Builds gleichzeitig, sonst kollidiert das Hochzählen der Version
+concurrency:
+  group: fmc-lobby-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  # Zielpfad auf dem Lobby-Server. Überschreibbar über die Repository-Variable LOBBY_PLUGIN_PATH.
+  PLUGIN_PATH: ${{ vars.LOBBY_PLUGIN_PATH || '/home/FC/Lobby/plugins/' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Patch-Version hochzählen
+        id: version
+        run: |
+          CURRENT=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          BASE=${CURRENT%%-*}
+          IFS=. read -r MAJOR MINOR PATCH <<< "$BASE"
+          NEW="${MAJOR}.${MINOR}.$((PATCH + 1))"
+          mvn -B -q versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false
+          echo "version=$NEW" >> "$GITHUB_OUTPUT"
+          echo "Version: $CURRENT -> $NEW"
+
+      - name: Build
+        run: mvn -B clean package
+
+      - name: Version committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pom.xml
+          git commit -m "Version ${{ steps.version.outputs.version }} [skip ci]"
+          git push
+
+      - name: JAR auf den Lobby-Server kopieren
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LOBBY_SSH_HOST }}
+          username: ${{ secrets.LOBBY_SSH_USER }}
+          key: ${{ secrets.LOBBY_SSH_KEY }}
+          port: ${{ secrets.LOBBY_SSH_PORT || 22 }}
+          source: target/FMC-Lobby.jar
+          target: ${{ env.PLUGIN_PATH }}
+          strip_components: 1
+
+      - name: Discord – Erfolg
+        if: success()
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          VERSION: ${{ steps.version.outputs.version }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          [ -z "$WEBHOOK" ] && exit 0
+          jq -n --arg v "$VERSION" --arg m "${COMMIT_MSG:-manuell gestartet}" --arg a "$ACTOR" --arg p "$PLUGIN_PATH" '{
+            embeds: [{
+              title: "✔ FMC-Lobby \($v) deployed",
+              description: "**Commit:** \($m)\n**Von:** \($a)\n**Ziel:** `\($p)`",
+              color: 10630655
+            }]
+          }' | curl -sS -H "Content-Type: application/json" -d @- "$WEBHOOK"
+
+      - name: Discord – Fehler
+        if: failure()
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          [ -z "$WEBHOOK" ] && exit 0
+          jq -n --arg u "$RUN_URL" --arg a "$ACTOR" '{
+            embeds: [{
+              title: "✖ FMC-Lobby Build fehlgeschlagen",
+              description: "**Von:** \($a)\n[Zum Log](\($u))",
+              color: 15158332
+            }]
+          }' | curl -sS -H "Content-Type: application/json" -d @- "$WEBHOOK"
