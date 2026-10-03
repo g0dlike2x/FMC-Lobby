@@ -29,6 +29,16 @@ messages:
     build-enabled: '%prefix%&7Baumodus &aaktiviert&7. Der Lobby-Schutz ist für dich aus.'
     build-disabled: '%prefix%&7Baumodus &cdeaktiviert&7. Der Lobby-Schutz ist wieder aktiv.'
 
+  # /discord und /buy – jede Zeile ist anklickbar und öffnet die URL aus config.yml (links.*)
+  links:
+    hover: '&7Klicke, um den Link zu öffnen'
+    discord:
+      - '%prefix%&7Unser Discord&8: &9discord.gg/farmmc'
+      - '%prefix%&7Klicke auf die Nachricht, um beizutreten.'
+    buy:
+      - '%prefix%&7Unser Shop&8: &6shop.farmmc.de'
+      - '%prefix%&7Klicke auf die Nachricht, um den Shop zu öffnen.'
+
   chat:
     muted: '%prefix%&cDer Chat ist aktuell deaktiviert.'
     # Broadcast an alle. Platzhalter: %player%
@@ -52,14 +62,11 @@ messages:
   particles:
     selected: '%prefix%&7Du hast den Partikel &a%particle% &7ausgewählt.'
     removed: '%prefix%&7Dein Partikel wurde &centfernt&7.'
-    locked: '%prefix%&cDieser Partikel ist für dich gesperrt.'
     none: '%prefix%&cDu hast keinen Partikel ausgewählt.'
     state-selected: '&a✔ Ausgewählt'
-    state-locked: '&4✖ &cGesperrt'
     state-available: '&e✦ Verfügbar'
     action-select: '&bKlicke hier, um den Partikel auszuwählen.'
     action-deselect: '&bKlicke hier, um den Partikel abzulegen.'
-    action-locked: '&cDu benötigst einen höheren Rang.'
     # Lore aller Partikel-Einträge. Platzhalter: %shape%, %state%, %action%
     lore:
       - ''

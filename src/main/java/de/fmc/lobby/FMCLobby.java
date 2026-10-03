@@ -4,6 +4,7 @@ import de.fmc.lobby.buildblock.BuildBlockListener;
 import de.fmc.lobby.buildblock.BuildBlockManager;
 import de.fmc.lobby.chat.ChatListener;
 import de.fmc.lobby.command.GlobalMuteCommand;
+import de.fmc.lobby.command.LinkCommand;
 import de.fmc.lobby.command.LobbyCommand;
 import de.fmc.lobby.config.ConfigManager;
 import de.fmc.lobby.display.ScoreboardManager;
@@ -33,6 +34,8 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
 
 /**
  * FMC-Lobby – Lobby-Server von FARMMC.DE.
@@ -95,6 +98,12 @@ public final class FMCLobby extends JavaPlugin {
             command.setExecutor(executor);
             command.setTabCompleter(executor);
         }
+        registerLink("discord", "https://discord.gg/farmmc", List.of(
+                "%prefix%&7Unser Discord&8: &9discord.gg/farmmc",
+                "%prefix%&7Klicke auf die Nachricht, um beizutreten."));
+        registerLink("buy", "https://shop.farmmc.de", List.of(
+                "%prefix%&7Unser Shop&8: &6shop.farmmc.de",
+                "%prefix%&7Klicke auf die Nachricht, um den Shop zu öffnen."));
         PluginCommand globalMute = getCommand("globalmute");
         if (globalMute != null) {
             GlobalMuteCommand executor = new GlobalMuteCommand(this, chat);
@@ -135,6 +144,15 @@ public final class FMCLobby extends JavaPlugin {
             messenger.unregister();
         }
         Bukkit.getScheduler().cancelTasks(this);
+    }
+
+    private void registerLink(String name, String fallbackUrl, List<String> fallbackLines) {
+        PluginCommand command = getCommand(name);
+        if (command != null) {
+            LinkCommand executor = new LinkCommand(this, name, fallbackUrl, fallbackLines);
+            command.setExecutor(executor);
+            command.setTabCompleter(executor);
+        }
     }
 
     /** /lobby reload: Dateien neu laden und alle Caches neu bauen. */

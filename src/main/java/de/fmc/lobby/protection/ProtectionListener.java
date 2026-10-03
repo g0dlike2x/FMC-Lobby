@@ -2,6 +2,7 @@ package de.fmc.lobby.protection;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import de.fmc.lobby.FMCLobby;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -214,9 +215,20 @@ public class ProtectionListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
-            event.setUseInteractedBlock(Event.Result.DENY);
+        Block clicked = event.getClickedBlock();
+        if (clicked == null || (action != Action.RIGHT_CLICK_BLOCK && action != Action.LEFT_CLICK_BLOCK)) {
+            return;
         }
+        // Wichtig: DENY auf den Block verhindert in Paper auch die Item-Nutzung (Platzieren, Angel).
+        // Deshalb nur interaktive Blöcke (Truhen, Türen, Knöpfe, Hebel …) sperren.
+        if (!clicked.getType().isInteractable()) {
+            return;
+        }
+        // Schleichen mit Item in der Hand: Vanilla nutzt den Block nicht, das Item (Baublock) soll gehen
+        if (action == Action.RIGHT_CLICK_BLOCK && event.getPlayer().isSneaking() && event.hasItem()) {
+            return;
+        }
+        event.setUseInteractedBlock(Event.Result.DENY);
     }
 
     @EventHandler(priority = EventPriority.LOW)

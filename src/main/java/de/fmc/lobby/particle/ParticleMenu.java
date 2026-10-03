@@ -9,6 +9,7 @@ import de.fmc.lobby.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
@@ -35,13 +36,8 @@ public class ParticleMenu extends LobbyMenu {
         ParticleEffect selected = manager.getSelected(viewer);
 
         for (ParticleEffect effect : manager.getPage(page).values()) {
-            if (effect == selected) {
-                inventory.setItem(effect.slot(), effect.itemSelected().clone());
-            } else if (effect.isLockedFor(viewer)) {
-                inventory.setItem(effect.slot(), effect.itemLocked().clone());
-            } else {
-                inventory.setItem(effect.slot(), effect.itemAvailable().clone());
-            }
+            ItemStack item = effect == selected ? effect.itemSelected() : effect.itemAvailable();
+            inventory.setItem(effect.slot(), item.clone());
         }
 
         int size = inventory.getSize();
@@ -106,11 +102,6 @@ public class ParticleMenu extends LobbyMenu {
         Map<Integer, ParticleEffect> entries = manager.getPage(page);
         ParticleEffect effect = entries.get(slot);
         if (effect == null) {
-            return;
-        }
-        if (effect.isLockedFor(viewer)) {
-            Sounds.deny(viewer);
-            cm.send(viewer, "particles.locked");
             return;
         }
         if (manager.getSelected(viewer) == effect) {

@@ -104,7 +104,7 @@ teleporter:
   servers:
     citybuild:
       slot: 13
-      proxy-name: 'CityBuild'      # Servername im Proxy
+      proxy-name: 'lobby'          # Servername im Proxy
       host: '127.0.0.1'            # für den Status-Ping
       port: 25566
       material: GRASS_BLOCK
@@ -122,7 +122,7 @@ teleporter:
 # particle: Vanilla-Name (z. B. heart, flame, dust, happy_villager, end_rod, witch, soul_fire_flame)
 # amount: Partikel pro Durchgang (wenig halten!)
 # Für "dust": color ('#RRGGBB') und size. Für "entity_effect": color.
-# permission: optional, ohne Permission ist der Eintrag "Gesperrt"
+# Alle Partikel sind für jeden Spieler frei (keine Permissions).
 # page: optional (Standard 1), mehrere Seiten erzeugen automatisch Pfeil-Köpfe
 particles:
   # Zeichen-Intervall in Ticks (2-3 empfohlen)
@@ -173,7 +173,6 @@ particles:
       particle: soul_fire_flame
       amount: 2
       shape: RING
-      permission: 'lobby.particle.soul'
     endrod:
       slot: 15
       material: END_ROD
@@ -181,7 +180,6 @@ particles:
       particle: end_rod
       amount: 2
       shape: HELIX
-      permission: 'lobby.particle.endrod'
     witch:
       slot: 16
       material: AMETHYST_SHARD
@@ -189,7 +187,6 @@ particles:
       particle: witch
       amount: 1
       shape: HALO
-      permission: 'lobby.particle.witch'
 
 # ──────────────────────────────── Enterhaken ────────────────────────────────
 grapple:
@@ -254,6 +251,12 @@ chat:
   format: '%prefix%&7%player% &8» &f%message%'
   # Wird genutzt, wenn LuckPerms fehlt oder kein Prefix gesetzt ist
   default-prefix: ''
+
+# ──────────────────────────────── Links (/discord, /buy) ────────────────────────────────
+# Die Texte stehen in der messages.yml unter links.*, ein Klick öffnet die URL.
+links:
+  discord: 'https://discord.gg/farmmc'
+  buy: 'https://shop.farmmc.de'
 
 # ──────────────────────────────── Netzwerk ────────────────────────────────
 network:

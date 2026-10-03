@@ -186,10 +186,6 @@ public class ParticleManager {
             material = Material.BLAZE_POWDER;
         }
         String plain = Text.color(s.getString("name", id));
-        String permission = s.getString("permission");
-        if (permission != null && permission.isBlank()) {
-            permission = null;
-        }
 
         ConfigManager cm = plugin.getConfigManager();
         String shapeName = cm.getMessageOrDefault("particles.shapes." + shape.name(), shape.name());
@@ -206,15 +202,10 @@ public class ParticleManager {
                         cm.getMessageOrDefault("particles.state-selected", "§a✔ Ausgewählt"),
                         cm.getMessageOrDefault("particles.action-deselect", "§bKlicke hier, um den Partikel abzulegen.")),
                 true);
-        ItemStack locked = ItemBuilder.build(material, 1, "§c§l" + plain,
-                lore(loreTemplate, shapeName,
-                        cm.getMessageOrDefault("particles.state-locked", "§4✖ §cGesperrt"),
-                        cm.getMessageOrDefault("particles.action-locked", "§cDu benötigst einen höheren Rang.")),
-                false);
 
         return new ParticleEffect(id, page, slot, plain, particle, data,
                 Math.max(1, Math.min(10, s.getInt("amount", 1))), s.getDouble("speed", 0.0),
-                permission, shape, available, selected, locked);
+                shape, available, selected);
     }
 
     private static List<String> lore(List<String> template, String shape, String state, String action) {
@@ -290,7 +281,7 @@ public class ParticleManager {
             return;
         }
         ParticleEffect effect = effects.get(id);
-        if (effect == null || effect.isLockedFor(player)) {
+        if (effect == null) {
             return;
         }
         active.put(player.getUniqueId(), new Active(player, effect));
