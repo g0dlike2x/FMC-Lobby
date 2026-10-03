@@ -114,12 +114,39 @@ public class TeleporterService {
             plugin.getLogger().warning("Teleporter-Eintrag '" + id + "': unbekanntes Material, nutze GRASS_BLOCK.");
             material = Material.GRASS_BLOCK;
         }
+        String host = s.getString("host", "127.0.0.1").trim();
+        int port = s.getInt("port", 25565);
+        checkTarget(id, proxyName, host, port);
+
         String name = Text.color(s.getString("name", "&a&l" + proxyName));
         ItemStack base = ItemBuilder.build(material, 1, name, null, s.getBoolean("glow", false));
         String plain = PlainTextComponentSerializer.plainText().serialize(Text.component(name));
-        return new ServerEntry(id, slot, proxyName,
-                s.getString("host", "127.0.0.1"), s.getInt("port", 25565),
+        return new ServerEntry(id, slot, proxyName, host, port,
                 base, List.copyOf(Text.color(s.getStringList("lore"))), plain);
+    }
+
+    /**
+     * Warnt, wenn ein Eintrag auf diesen Lobby-Server selbst zeigt. Dann würde der Ping
+     * die Lobby-Spielerzahl liefern und der Klick in die Lobby verbinden.
+     */
+    private void checkTarget(String id, String proxyName, String host, int port) {
+        if (port == Bukkit.getPort() && isLocalHost(host)) {
+            plugin.getLogger().warning("Teleporter-Eintrag '" + id + "': " + host + ":" + port
+                    + " ist dieser Lobby-Server selbst! Die Lore zeigt dann die Lobby-Spielerzahl. "
+                    + "Trage den Port von " + proxyName + " ein (server-port in dessen server.properties).");
+        }
+        String ownName = plugin.getConfigManager().getConfig().getString("server-name", "Lobby");
+        if (proxyName.equalsIgnoreCase(ownName)) {
+            plugin.getLogger().warning("Teleporter-Eintrag '" + id + "': proxy-name '" + proxyName
+                    + "' entspricht server-name dieser Lobby. Prüfe, ob das der richtige Server im Proxy ist.");
+        }
+    }
+
+    private static boolean isLocalHost(String host) {
+        String h = host.toLowerCase(java.util.Locale.ROOT);
+        String ownIp = Bukkit.getIp();
+        return h.equals("localhost") || h.startsWith("127.") || h.equals("0.0.0.0") || h.equals("::1")
+                || (ownIp != null && !ownIp.isBlank() && h.equals(ownIp.toLowerCase(java.util.Locale.ROOT)));
     }
 
     // ───────────────────────────── Status-Ping ─────────────────────────────
@@ -151,6 +178,13 @@ public class TeleporterService {
                     ServerStatus old = statusCache.put(entry.id(), status);
                     if (!status.equals(old)) {
                         queueRefresh();
+                    }
+                    // Nur bei Wechsel online/offline loggen (hilft beim Prüfen von host/port)
+                    if (old == null || old.online() != status.online()) {
+                        plugin.getLogger().info("Teleporter '" + entry.id() + "' (" + entry.host() + ":"
+                                + entry.port() + ") ist " + (status.online()
+                                ? "erreichbar, " + status.players() + "/" + status.max() + " Spieler."
+                                : "nicht erreichbar."));
                     }
                 } finally {
                     flag.set(false);
