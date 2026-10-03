@@ -91,7 +91,8 @@ gui:
 
 # ──────────────────────────────── Teleporter ────────────────────────────────
 # Neue Spielmodi werden nur hier ergänzt (danach /lobby reload).
-# Platzhalter in der Lore: %status%, %online%, %max%, %server%
+# Platzhalter in der Lore: %status%, %online%, %max%, %server%, %queue% (Wartende),
+# %action% (Klick-Hinweis: betreten / Warteschlange beitreten / verlassen, Texte in messages.yml)
 teleporter:
   title: '&8&nLobby&8 | Teleporter'
   rows: 3
@@ -101,6 +102,17 @@ teleporter:
   ping-timeout-ms: 1000
   # Schutz gegen Spam-Klicks (Millisekunden)
   click-cooldown-ms: 2000
+  # Warteschlange: Klick auf einen offline Server reiht ein, erneuter Klick verlässt sie.
+  # Ist der Server wieder online, werden alle gestaffelt verbunden.
+  queue:
+    enabled: true
+    connects-per-second: 5
+    # Wartezeit nach dem Online-Gehen, damit der Server fertig starten kann
+    connect-delay-seconds: 5
+  # BossBar "… startet neu, offline seit 2:13" für alle, solange ein Server offline ist
+  # (pro Server abschaltbar mit bossbar: false)
+  bossbar:
+    enabled: true
   servers:
     citybuild:
       slot: 13
@@ -114,8 +126,9 @@ teleporter:
         - ''
         - '&7Status&8: %status%'
         - '&7Spieler online&8: &e%online%&8/&e%max%'
+        - '&7Warteschlange&8: &e%queue%'
         - ''
-        - '&bKlicke hier, um CityBuild zu betreten.'
+        - '%action%'
 
 # ──────────────────────────────── Partikel ────────────────────────────────
 # Formen: RING (Hüfte), HELIX (Spirale), HALO (über dem Kopf), FEET (an den Füßen)
@@ -205,6 +218,23 @@ grapple:
   sounds:
     pull: 'entity.fishing_bobber.retrieve'
     wind: 'entity.wind_charge.wind_burst'
+
+# ──────────────────────────────── Doppelsprung ────────────────────────────────
+# Leertaste in der Luft = Boost in Blickrichtung. Erst nach der Landung wieder möglich.
+# Gilt im Survival/Adventure, nicht im Baumodus.
+double-jump:
+  enabled: true
+  # Vorwärts-Schub (0 = nur nach oben, max. 2.0)
+  forward: 1.1
+  # Höhe (0.2 - 1.2)
+  height: 0.85
+  # Mindestabstand zwischen zwei Sprüngen (Millisekunden)
+  cooldown-ms: 800
+  sound: 'entity.breeze.jump'
+  pitch: 1.2
+  # Nur Partikel ohne Zusatzdaten (cloud, poof, end_rod, firework …)
+  particle: cloud
+  particle-amount: 12
 
 # ──────────────────────────────── Baublöcke ────────────────────────────────
 build-blocks:

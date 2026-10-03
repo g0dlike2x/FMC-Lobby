@@ -9,6 +9,7 @@ import de.fmc.lobby.command.LobbyCommand;
 import de.fmc.lobby.config.ConfigManager;
 import de.fmc.lobby.display.ScoreboardManager;
 import de.fmc.lobby.display.TablistManager;
+import de.fmc.lobby.doublejump.DoubleJumpListener;
 import de.fmc.lobby.grapple.GrappleListener;
 import de.fmc.lobby.gui.GuiItems;
 import de.fmc.lobby.gui.LobbyMenu;
@@ -22,6 +23,7 @@ import de.fmc.lobby.network.BungeeMessenger;
 import de.fmc.lobby.particle.ParticleManager;
 import de.fmc.lobby.protection.BuildModeManager;
 import de.fmc.lobby.protection.ProtectionListener;
+import de.fmc.lobby.teleporter.QueueManager;
 import de.fmc.lobby.teleporter.TeleporterService;
 import de.fmc.lobby.util.Keys;
 import org.bukkit.Bukkit;
@@ -57,6 +59,8 @@ public final class FMCLobby extends JavaPlugin {
     private ScoreboardManager scoreboard;
     private TablistManager tablist;
     private ChatListener chat;
+    private QueueManager queue;
+    private DoubleJumpListener doubleJump;
 
     @Override
     public void onEnable() {
@@ -79,6 +83,8 @@ public final class FMCLobby extends JavaPlugin {
         scoreboard = new ScoreboardManager(this);
         tablist = new TablistManager(this);
         chat = new ChatListener(this);
+        queue = new QueueManager(this, teleporter);
+        doubleJump = new DoubleJumpListener(this);
 
         reloadComponents();
         applyWorldSettings();
@@ -91,6 +97,7 @@ public final class FMCLobby extends JavaPlugin {
         pm.registerEvents(buildBlockListener, this);
         pm.registerEvents(grapple, this);
         pm.registerEvents(chat, this);
+        pm.registerEvents(doubleJump, this);
 
         PluginCommand command = getCommand("lobby");
         if (command != null) {
@@ -127,6 +134,12 @@ public final class FMCLobby extends JavaPlugin {
         if (buildBlocks != null) {
             // Alle offenen Baublöcke sofort entfernen
             buildBlocks.removeAll();
+        }
+        if (queue != null) {
+            queue.shutdown();
+        }
+        if (doubleJump != null) {
+            doubleJump.shutdown();
         }
         if (teleporter != null) {
             teleporter.shutdown();
@@ -175,6 +188,8 @@ public final class FMCLobby extends JavaPlugin {
         guiItems.reload();
         hotbar.reload();
         teleporter.reload();
+        queue.reload();
+        doubleJump.reload();
         particles.reload();
         grapple.reload();
         buildBlocks.reload();
@@ -227,6 +242,8 @@ public final class FMCLobby extends JavaPlugin {
             player.teleport(configManager.getSpawn());
         }
         particles.load(player);
+        // Nach dem Gamemode-Wechsel, sonst setzt Survival allowFlight wieder zurück
+        doubleJump.enable(player);
     }
 
     // ───────────────────────────── Getter ─────────────────────────────
@@ -269,5 +286,13 @@ public final class FMCLobby extends JavaPlugin {
 
     public TablistManager getTablist() {
         return tablist;
+    }
+
+    public QueueManager getQueue() {
+        return queue;
+    }
+
+    public DoubleJumpListener getDoubleJump() {
+        return doubleJump;
     }
 }

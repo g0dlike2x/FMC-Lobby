@@ -58,6 +58,21 @@ messages:
     connecting: '%prefix%&7Du wirst mit &a%server% &7verbunden&8...'
     # ActionBar
     cooldown: '&cBitte warte einen Moment.'
+    # Klick-Hinweis in der Lore (%action%)
+    action-connect: '&bKlicke hier, um %server% zu betreten.'
+    action-queue-join: '&bKlicke hier, um der Warteschlange beizutreten.'
+    action-queue-leave: '&bKlicke hier, um die Warteschlange zu verlassen.'
+    # Warteschlange. Platzhalter: %server%, %position%
+    queue-joined: '%prefix%&7Du bist in der Warteschlange für &a%server% &8(&7Platz &e%position%&8)&7. Sobald der Server online ist, wirst du automatisch verbunden.'
+    queue-left: '%prefix%&7Du hast die Warteschlange für &a%server% &cverlassen&7.'
+    queue-connecting: '%prefix%&a%server% &7ist wieder online. Du wirst verbunden&8...'
+    # ActionBar für Wartende (jede Sekunde). Platzhalter: %server%, %position%, %size%
+    queue-actionbar: '&7Warteschlange &a%server%&8: &7Platz &e%position%&8/&e%size%'
+    # Chat-Hinweis an alle, die nicht warten
+    back-online: '%prefix%&a%server% &7ist wieder online. Nutze den &eTeleporter&7, um beizutreten.'
+    # BossBar. Platzhalter: %server%, %time% (offline seit), %queue%
+    bossbar-offline: '&c✖ &a%server% &7startet neu&8… &7offline seit &e%time%'
+    bossbar-online: '&a✔ %server% &7ist wieder online&8, &7du wirst verbunden&8… &8(&e%queue% &7wartend&8)'
 
   particles:
     selected: '%prefix%&7Du hast den Partikel &a%particle% &7ausgewählt.'

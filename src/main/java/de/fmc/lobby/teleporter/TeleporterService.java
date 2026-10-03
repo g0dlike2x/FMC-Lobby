@@ -53,6 +53,9 @@ public class TeleporterService {
     private int rows = 3;
     private String statusOnline;
     private String statusOffline;
+    private String actionConnect;
+    private String actionQueueJoin;
+    private String actionQueueLeave;
 
     public TeleporterService(FMCLobby plugin) {
         this.plugin = plugin;
@@ -66,6 +69,12 @@ public class TeleporterService {
         cooldownMs = Math.max(0, config.getLong("teleporter.click-cooldown-ms", 2000));
         statusOnline = plugin.getConfigManager().getMessageOrDefault("teleporter.status-online", "§a✔ Online");
         statusOffline = plugin.getConfigManager().getMessageOrDefault("teleporter.status-offline", "§c✖ Neustart läuft");
+        actionConnect = plugin.getConfigManager().getMessageOrDefault("teleporter.action-connect",
+                "§bKlicke hier, um %server% zu betreten.");
+        actionQueueJoin = plugin.getConfigManager().getMessageOrDefault("teleporter.action-queue-join",
+                "§bKlicke hier, um der Warteschlange beizutreten.");
+        actionQueueLeave = plugin.getConfigManager().getMessageOrDefault("teleporter.action-queue-leave",
+                "§bKlicke hier, um die Warteschlange zu verlassen.");
 
         List<ServerEntry> list = new ArrayList<>();
         Map<Integer, ServerEntry> slots = new HashMap<>();
@@ -122,7 +131,7 @@ public class TeleporterService {
         ItemStack base = ItemBuilder.build(material, 1, name, null, s.getBoolean("glow", false));
         String plain = PlainTextComponentSerializer.plainText().serialize(Text.component(name));
         return new ServerEntry(id, slot, proxyName, host, port,
-                base, List.copyOf(Text.color(s.getStringList("lore"))), plain);
+                base, List.copyOf(Text.color(s.getStringList("lore"))), plain, s.getBoolean("bossbar", true));
     }
 
     /**
@@ -201,16 +210,21 @@ public class TeleporterService {
         try {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 refreshQueued.set(false);
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder(false);
-                    if (holder instanceof TeleporterMenu menu) {
-                        menu.render();
-                    }
-                }
+                refreshOpenMenus();
             });
         } catch (IllegalPluginAccessException e) {
             // Plugin wird gerade deaktiviert
             refreshQueued.set(false);
+        }
+    }
+
+    /** Alle offenen Teleporter-GUIs neu setzen (nur Main-Thread). */
+    public void refreshOpenMenus() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryHolder holder = player.getOpenInventory().getTopInventory().getHolder(false);
+            if (holder instanceof TeleporterMenu menu) {
+                menu.render();
+            }
         }
     }
 
@@ -230,6 +244,23 @@ public class TeleporterService {
 
     public ServerStatus getStatus(ServerEntry entry) {
         return statusCache.getOrDefault(entry.id(), ServerStatus.OFFLINE);
+    }
+
+    /** false, solange für den Eintrag noch kein Ping zurückgekommen ist. */
+    public boolean hasStatus(ServerEntry entry) {
+        return statusCache.containsKey(entry.id());
+    }
+
+    public String getActionConnect() {
+        return actionConnect;
+    }
+
+    public String getActionQueueJoin() {
+        return actionQueueJoin;
+    }
+
+    public String getActionQueueLeave() {
+        return actionQueueLeave;
     }
 
     public String getTitle() {

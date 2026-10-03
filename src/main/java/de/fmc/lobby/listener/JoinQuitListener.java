@@ -33,6 +33,7 @@ public class JoinQuitListener implements Listener {
         event.joinMessage(null);
         Player player = event.getPlayer();
         plugin.preparePlayer(player, true);
+        plugin.getQueue().onJoin(player);
 
         // Willkommensnachricht 5 Ticks nach dem Join
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -62,5 +63,7 @@ public class JoinQuitListener implements Listener {
         plugin.getParticles().unload(uuid);
         plugin.getGrapple().remove(uuid);
         plugin.getBuildMode().remove(uuid);
+        plugin.getQueue().remove(event.getPlayer());
+        plugin.getDoubleJump().remove(uuid);
     }
 }

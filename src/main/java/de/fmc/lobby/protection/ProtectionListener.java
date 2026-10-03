@@ -158,6 +158,7 @@ public class ProtectionListener implements Listener {
         Player player = event.getPlayer();
         if (!plugin.getBuildMode().isBuilder(player)) {
             plugin.getHotbar().give(player);
+            plugin.getDoubleJump().enable(player);
         }
     }
 
