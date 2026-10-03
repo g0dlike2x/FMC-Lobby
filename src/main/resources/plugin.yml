@@ -14,8 +14,21 @@ commands:
     description: Verwaltung der Lobby
     usage: /lobby <reload|setspawn|build>
     permission: lobby.command
+  globalmute:
+    description: Schaltet den Chat für alle Spieler ab oder wieder an
+    usage: /globalmute
+    permission: lobby.globalmute
 
 permissions:
+  lobby.globalmute:
+    description: /globalmute benutzen
+    default: op
+  lobby.globalmute.bypass:
+    description: Trotz Globalmute schreiben
+    default: op
+  lobby.chat.color:
+    description: Farbcodes (&a, &l …) im Chat nutzen
+    default: op
   lobby.command:
     description: Zugriff auf /lobby
     default: true

@@ -36,8 +36,27 @@ public final class LuckPermsHook {
         return Access.primaryGroup(player);
     }
 
+    /**
+     * Chat-Prefix aus den gecachten Meta-Daten (threadsicher, auch im AsyncChatEvent nutzbar).
+     * Liefert null, wenn LuckPerms fehlt oder kein Prefix gesetzt ist.
+     */
+    public static String prefix(Player player) {
+        if (!available) {
+            return null;
+        }
+        return Access.prefix(player);
+    }
+
     /** Getrennte Klasse, damit LuckPerms-Klassen nur bei Bedarf geladen werden. */
     private static final class Access {
+        private static String prefix(Player player) {
+            User user = LuckPermsProvider.get().getUserManager().getUser(player.getUniqueId());
+            if (user == null) {
+                return null;
+            }
+            return user.getCachedData().getMetaData().getPrefix();
+        }
+
         private static String primaryGroup(Player player) {
             LuckPerms api = LuckPermsProvider.get();
             User user = api.getUserManager().getUser(player.getUniqueId());

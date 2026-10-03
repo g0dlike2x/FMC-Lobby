@@ -245,6 +245,16 @@ tablist:
     - '&7Discord&8: &9discord.gg/farmmc &8┃ &7TikTok&8: &d@FarmMC'
     - '%nl%'
 
+# ──────────────────────────────── Chat ────────────────────────────────
+# Platzhalter: %prefix% (LuckPerms-Prefix), %player%, %message%
+# Farbcodes in der Nachricht nur mit Permission lobby.chat.color.
+# Globalmute: /globalmute (lobby.globalmute), schreiben trotz Mute: lobby.globalmute.bypass
+chat:
+  enabled: true
+  format: '%prefix%&7%player% &8» &f%message%'
+  # Wird genutzt, wenn LuckPerms fehlt oder kein Prefix gesetzt ist
+  default-prefix: ''
+
 # ──────────────────────────────── Netzwerk ────────────────────────────────
 network:
   # Wie oft die Gesamt-Spielerzahl (PlayerCount ALL) beim Proxy abgefragt wird

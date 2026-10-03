@@ -2,6 +2,8 @@ package de.fmc.lobby;
 
 import de.fmc.lobby.buildblock.BuildBlockListener;
 import de.fmc.lobby.buildblock.BuildBlockManager;
+import de.fmc.lobby.chat.ChatListener;
+import de.fmc.lobby.command.GlobalMuteCommand;
 import de.fmc.lobby.command.LobbyCommand;
 import de.fmc.lobby.config.ConfigManager;
 import de.fmc.lobby.display.ScoreboardManager;
@@ -51,6 +53,7 @@ public final class FMCLobby extends JavaPlugin {
     private ProtectionListener protection;
     private ScoreboardManager scoreboard;
     private TablistManager tablist;
+    private ChatListener chat;
 
     @Override
     public void onEnable() {
@@ -72,6 +75,7 @@ public final class FMCLobby extends JavaPlugin {
         protection = new ProtectionListener(this);
         scoreboard = new ScoreboardManager(this);
         tablist = new TablistManager(this);
+        chat = new ChatListener(this);
 
         reloadComponents();
         applyWorldSettings();
@@ -83,12 +87,19 @@ public final class FMCLobby extends JavaPlugin {
         pm.registerEvents(protection, this);
         pm.registerEvents(buildBlockListener, this);
         pm.registerEvents(grapple, this);
+        pm.registerEvents(chat, this);
 
         PluginCommand command = getCommand("lobby");
         if (command != null) {
             LobbyCommand executor = new LobbyCommand(this);
             command.setExecutor(executor);
             command.setTabCompleter(executor);
+        }
+        PluginCommand globalMute = getCommand("globalmute");
+        if (globalMute != null) {
+            GlobalMuteCommand executor = new GlobalMuteCommand(this, chat);
+            globalMute.setExecutor(executor);
+            globalMute.setTabCompleter(executor);
         }
 
         // Falls per PlugMan neu geladen: bereits verbundene Spieler direkt einrichten
@@ -153,6 +164,7 @@ public final class FMCLobby extends JavaPlugin {
         protection.reload();
         scoreboard.reload();
         tablist.reload();
+        chat.reload();
     }
 
     /** Gamerules setzen und Autosave abschalten. */

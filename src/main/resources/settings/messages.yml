@@ -29,6 +29,12 @@ messages:
     build-enabled: '%prefix%&7Baumodus &aaktiviert&7. Der Lobby-Schutz ist für dich aus.'
     build-disabled: '%prefix%&7Baumodus &cdeaktiviert&7. Der Lobby-Schutz ist wieder aktiv.'
 
+  chat:
+    muted: '%prefix%&cDer Chat ist aktuell deaktiviert.'
+    # Broadcast an alle. Platzhalter: %player%
+    globalmute-enabled: '%prefix%&7Der Chat wurde von &c%player% &cdeaktiviert&7.'
+    globalmute-disabled: '%prefix%&7Der Chat wurde von &a%player% &awieder aktiviert&7.'
+
   gui:
     back: '&c<- Zurück zum Menü'
     previous-page: '&a<- Vorherige Seite'
